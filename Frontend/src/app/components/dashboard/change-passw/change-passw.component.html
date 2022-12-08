@@ -1,0 +1,46 @@
+<head>
+    <link type="text/css" rel="stylesheet" href="/assets/styles/css/bootstrap.min.css" />
+</head>
+<div class="container-sm w-50 mt-3">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="text-center">Cambiar Contraseña</h3>
+        </div>
+        <div class="card-body">
+            <form id="frmPassw" [formGroup]="frmPassw" (ngSubmit)="onSubmit();">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" formControlName="passw" id="passw" placeholder="Contraseña actual">
+                    <label for="contraseña">Contraseña</label>
+                    <div class="alert alert-danger" *ngIf="frmPassw.controls['passw'].invalid && frmPassw.controls['passw'].touched">
+                        <div *ngIf="frmPassw.controls['passw'].errors!['required']">contraseña no válida</div>
+                        <div *ngIf="frmPassw.controls['passw'].errors!['invalid']">contraseña actual no válida</div>
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" formControlName="passwN" id="passwN" placeholder="Nueva Contraseña">
+                    <label for="passN">Nueva Contraseña</label>
+                    <div class="alert alert-danger" *ngIf="frmPassw.controls['passwN'].invalid && frmPassw.controls['passwN'].touched">
+                        <div *ngIf="frmPassw.controls['passwN'].errors!['required']">Debe ingresar la contraseña nueva</div>
+                    </div>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" formControlName="passwR" id="passwR" placeholder="Confirmar Contraseña">
+                    <label for="passR">Confirmar Contraseña</label>
+                    <div class="alert alert-danger" *ngIf="frmPassw.controls['passwR'].invalid && frmPassw.controls['passwR'].touched">
+                        <div *ngIf="frmPassw.controls['passwR'].errors!['required']">Debe repetir la contraseña nueva</div>
+                        <div *ngIf="frmPassw.controls['passwR'].errors!['debeCoincidir']">La contraseña nueva y la de confirmacion deben coincidir</div>
+                    </div>
+                </div>
+                <div class="alert alert-success" *ngIf="guardado">Contraseña cambiada de forma correcta</div>
+                <div *ngIf="frmPassw.errors?.['coincide'] && frmPassw.controls['passwR'].touched" class="alert alert-danger">Contraseña nueva y de confirmacion no coinciden</div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-end">
+                <button Type="submit" class="btn btn-primary" [disabled]="frmPassw.invalid"
+                    form="frmPassw">Cambiar</button>
+                <button class="btn btn-danger ms-3" (click)="onCerrar();">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

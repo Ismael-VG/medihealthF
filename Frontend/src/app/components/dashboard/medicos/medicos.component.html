@@ -1,0 +1,280 @@
+
+<!-- "node_modules/bootstrap/dist/css/bootstrap.min.css" -->
+<link type="text/css" rel="stylesheet" href="/assets/styles/css/bootstrap.min.css" />
+
+<div class="container">
+  <div class="card">
+    <div class="card-header text-center">
+      <h4>Catálogo medicos</h4>
+    </div>
+    <div class="card-body">
+      <div class="container-fluid" [@estadoFiltro]="stateFiltro">
+        <form>
+          <div class="d-flex">
+            <div class="d-flex">
+              <input type="text" class="form-control me-2" placeholder="Id Cliente" #fIdCliente (keyup)="onFiltroChange({
+                idMedico : fIdCliente.value,
+                nombre : fNombre.value,
+                apellidoUno : fApellido1.value,
+                apellidoDos : fApellido2.value
+              })">
+              <input type="text" class="form-control me-2" placeholder="Nombre" #fNombre (keyup)="onFiltroChange({
+                idMedico : fIdCliente.value,
+                nombre : fNombre.value,
+                apellidoUno : fApellido1.value,
+                apellidoDos : fApellido2.value
+              })">
+              <input type="text" class="form-control me-2" placeholder="apellidoUno" #fApellido1 (keyup)="onFiltroChange({
+                idMedico : fIdCliente.value,
+                nombre : fNombre.value,
+                apellidoUno : fApellido1.value,
+                apellidoDos : fApellido2.value
+              })">
+              <input type="text" class="form-control me-3" placeholder=" apellidoDos" #fApellido2 (keyup)="onFiltroChange({
+                idMedico : fIdCliente.value,
+                nombre : fNombre.value,
+                apellidoUno : fApellido1.value,
+                apellidoDos : fApellido2.value
+              })">
+            </div>
+            <button class="btn btn-danger" (click)="onFiltrar()">&times;</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover table-sm">
+          <thead>
+            <tr>
+              <th scope="col" (click)="onOrden('idMedico');" class="orden">Id
+                <fa-icon [icon]="['fas', 'sort']"></fa-icon>
+              </th>
+              <th scope="col" (click)="onOrden('nombre');" class="orden">Nombre
+                <fa-icon [icon]="['fas', 'sort-down']" *ngIf="reversa"></fa-icon>
+                <fa-icon [icon]="['fas', 'sort-up']" *ngIf="!reversa"></fa-icon>
+              </th>
+              <th scope="col" (click)="onOrden('apellidoUno');" class="orden">apellidoUno</th>
+              <th scope="col" (click)="onOrden('apellidoDos');" class="orden">apellidoDos</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Correo</th>
+              <th [colSpan]="2" class="text-center">
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                  (click)="onNuevo()">
+                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of medicos 
+            | orderBy: clave : reversa : true
+            | paginate: {
+            itemsPerPage: itemsPPag,
+            currentPage: pagActual,
+            totalItems: numRegs }">
+              <th scope="row">{{ item.idMedico }}</th>
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.apellidoUno }}</td>
+              <td>{{ item.apellidoDos }}</td>
+              <td>{{ item.telefono }}</td>
+              <td>{{ item.telefono }}</td>
+              <td>{{ item.correo }}</td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                  (click)="onEditar(item.idMedico)">
+                  <fa-icon [icon]="['fas', 'pencil']"></fa-icon>
+                </button>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-danger" (click)="
+                    onEliminar(
+                      item.id,
+                      item.nombre + ' ' + item.apellidoUno + ' ' + item.apellidoDos
+                    )
+                  ">
+                  <fa-icon [icon]="['fas', 'trash-can']"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between pt-4">
+      <div class="d-flex">
+        <div class="selector me-3">
+          <select class="form-select" (change)="onCambioTama($event);">
+            <option *ngFor="let tama of paginas" [ngValue]="tama" [selected]="tama===itemsPPag">{{tama}}</option>
+          </select>
+        </div>
+        <pagination-controls (pageChange)="onCambioPag($event)" previousLabel="" nextLabel="">
+        </pagination-controls>
+      </div>
+      <div class="botones">
+        <button class="btn btn-sm btn-outline-primary me-2" (click)="onFiltrar();">
+          <fa-icon [icon]="['fas','filter']"></fa-icon> Filtrar
+        </button>
+        <button class="btn btn-sm btn-outline-success me-2" (click)="onImprimir();">
+          <fa-icon [icon]="['fas','print']"></fa-icon> Imprimir
+        </button>
+        <button class="btn btn-sm btn-outline-danger" (click)="onCerrar();">
+          <fa-icon [icon]="['fas','power-off']"></fa-icon> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ventana del formulario -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">{{ titulo }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="frmMedico" [formGroup]="frmMedico" (ngSubmit)="onGuardar()">
+          <div class="row mb-1">
+            <label for="idMedico" class="col-sm-3 col-form-label">Id Cliente</label>
+            <div class="col-sm-9">
+              <input type="text" formControlName="idMedico" class="form-control" id="idMedico"
+                placeholder="Id Cliente" />
+              <div class="alert alert-danger" *ngIf="E['idMedico'].invalid && E['idMedico'].touched">
+                <div *ngIf="E['idMedico'].errors!['required']">
+                  El idMedico es obligatorio
+                </div>
+                <div *ngIf="E['idMedico'].errors!['maxlength']">
+                  El tamaño maximo es de 15
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <label for="nombre" class="col-sm-3 col-form-label">Nombre</label>
+            <div class="col-sm-9">
+              <input type="text" formControlName="nombre" class="form-control" id="nombre" placeholder="Nombre" />
+              <div class="alert alert-danger" *ngIf="E['nombre'].invalid && E['nombre'].touched">
+                <div *ngIf="E['nombre'].errors!['required']">
+                  El nombre es obligatorio
+                </div>
+                <div *ngIf="E['nombre'].errors!['maxlength']">
+                  El tamaño maximo del nombre es de 30
+                </div>
+                <div *ngIf="E['nombre'].errors!['minlength']">
+                  El nombre debe ser de al menos 2
+                </div>
+                <div *ngIf="E['nombre'].errors!['pattern']">
+                  El nombre no es valido
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <label for="apellidoUno" class="col-sm-3 col-form-label">apellidoUno</label>
+            <div class="col-sm-9">
+              <input type="text" formControlName="apellidoUno" class="form-control" id="apellidoUno"
+                placeholder="apellidoUno" />
+              <div class="alert alert-danger" *ngIf="E['apellidoUno'].invalid && E['apellidoUno'].touched">
+                <div *ngIf="E['apellidoUno'].errors!['required']">
+                  El apellidoUno es obligatorio
+                </div>
+                <div *ngIf="E['apellidoUno'].errors!['maxlength']">
+                  El tamaño maximo del apellidoUno es de 15
+                </div>
+                <div *ngIf="E['apellidoUno'].errors!['minlength']">
+                  El apellidoUno debe ser de al menos 2
+                </div>
+                <div *ngIf="E['apellidoUno'].errors!['pattern']">
+                  El apellidoUno no es valido
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <label for="apellidoDos" class="col-sm-3 col-form-label">apellidoDos</label>
+            <div class="col-sm-9">
+              <input type="text" formControlName="apellidoDos" class="form-control" id="apellidoDos"
+                placeholder="apellidoDos" />
+              <div class="alert alert-danger" *ngIf="E['apellidoDos'].invalid && E['apellidoDos'].touched">
+                <div *ngIf="E['apellidoDos'].errors!['required']">
+                  El apellidoDos es obligatorio
+                </div>
+                <div *ngIf="E['apellidoDos'].errors!['maxlength']">
+                  El tamaño maximo del apellidoUno es de 15
+                </div>
+                <div *ngIf="E['apellidoDos'].errors!['minlength']">
+                  El apellidoDos debe ser de al menos 2
+                </div>
+                <div *ngIf="E['apellidoDos'].errors!['pattern']">
+                  El apellidoDos no es valido
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <label for="telefono" class="col-sm-3 col-form-label">Telefono</label>
+            <div class="col-sm-9">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input type="tel" formControlName="telefono" class="form-control" id="telefono"
+                    placeholder="Telefono" />
+                  <div class="alert alert-danger" *ngIf="E['telefono'].invalid && E['telefono'].touched">
+                    <div *ngIf="E['telefono'].errors!['pattern']">
+                      El Telefono no es valido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <input type="tel" formControlName="telefono" class="form-control" id="telefono" placeholder="Telefono" />
+                  <div class="alert alert-danger" *ngIf="E['telefono'].invalid && E['telefono'].touched">
+                    <div *ngIf="E['telefono'].errors!['pattern']">
+                      El Telefono no es valido
+                    </div>
+                    <div *ngIf="E['telefono'].errors!['required']">
+                      El Telefono es obligatorio
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <label for="correo" class="col-sm-3 col-form-label">Email</label>
+            <div class="col-sm-9">
+              <input type="email" formControlName="correo" class="form-control" id="email" placeholder="Email" />
+              <div class="alert alert-danger" *ngIf="E['correo'].invalid && E['correo'].touched">
+                <div *ngIf="E['correo'].errors!['required']">
+                  El correo es obligatorio
+                </div>
+                <div *ngIf="E['correo'].errors!['email']">
+                  El correo no es valido
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label for="ubicacion" class="col-sm-3 col-form-label">Ubicacion</label>
+            <div class="col-sm-9">
+              <textarea id="ubicacion" formControlName="ubicacion" class="form-control"
+                placeholder="Ubicacion"></textarea>
+            </div>
+          </div>
+        </form>
+
+        <!-- Valido: {{this.frmMedico.valid}} <br>
+Estado: {{this.frmMedico.status}} <br> -->
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" form="frmMedico" [disabled]="frmMedico.invalid">
+          <fa-icon [icon]="['fas', 'save']"></fa-icon> Guardar
+        </button>
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

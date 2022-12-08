@@ -1,0 +1,29 @@
+<mat-toolbar color="primary">
+    <span>Sistema Medico</span>
+    <span class="example-spacer"></span>
+    <button mat-button *ngFor="let item of menu" [routerLink]="item.redirect">{{item.nombre}}</button>
+    <span class="example-spacer"></span>
+    <span>{{usuario}}</span>
+    <button (click)="onSalir()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+        <mat-icon>logout</mat-icon>
+      </button>
+      <button routerLink="passw" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+        <mat-icon>lock_reset</mat-icon>
+      </button>
+  </mat-toolbar>
+
+
+
+
+  <!-- <div class="btn-group dropstart" *ngIf="usuario">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <fa-icon [icon]="['fas','user']"></fa-icon> {{usuario}}
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#" (click)="onSalir();">Salir</a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li><a class="dropdown-item" [routerLink]="['/passw']">Cambiar contraseña</a></li>
+    </ul>
+  </div> -->

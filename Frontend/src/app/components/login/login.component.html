@@ -1,0 +1,33 @@
+<div class="body">
+    <div class="login">
+        <mat-spinner *ngIf="loading" class="spinner" diameter="50"></mat-spinner>
+
+        <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- <img src="../../../assets/img/user.png" alt=""> -->
+        <img src="../../../assets/images/service-icon2.png" alt="" width="50%">
+        <h1>Iniciar Sesion</h1>
+        <mat-form-field class="ancho" appearance="fill">
+            <mat-label>Usuario</mat-label>
+            <input type="text" matInput autocomplete="off" formControlName="idUsuario">
+        </mat-form-field>
+        <div class="alert alert-danger"
+        *ngIf="form.controls['idUsuario'].invalid && form.controls['idUsuario'].touched">
+        <div *ngIf="form.controls['idUsuario'].errors!['required']">IdUsuario Obligatorio</div>
+    </div>
+        <mat-form-field class="ancho" appearance="fill">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput autocomplete="off" formControlName="passw">
+        </mat-form-field>
+        <div class="alert alert-danger"
+        *ngIf="form.controls['passw'].invalid && form.controls['passw'].touched">
+        <div *ngIf="form.controls['passw'].errors!['required']">Contraseña Obligatorio</div>
+    </div>
+        <br>
+        <button type="submit" class="ancho button" mat-raised-button color="primary" [disabled]="form.invalid">Ingresar</button>
+        <div class="alert alert-danger" *ngIf="errorLogin">Usuario o contraseña no valido</div>
+        </form>
+        <br>
+        <button (click)="volver()" class="ancho button" mat-raised-button color="accent" >Volver</button>
+
+    </div>
+</div>
